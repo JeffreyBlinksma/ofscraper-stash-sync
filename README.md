@@ -9,6 +9,7 @@ This project unites the work of [OF-Scraper](https://github.com/datawhores/OF-Sc
  * URLs: Link to original file on OF
  * Performers: Original posting model as well as any models @mentioned in the post text are added to the stash media record. For this to work the OF username must match exactly either the Stash performer name or one of the performer's aliases.
  * Organized: Set to true once processed. This prevents processing already processed media.
+ * Galleries: Bundles images belonging to the same post together in galleries.
 
 ## Installation and Use
 This script can be run directly or through a docker image
