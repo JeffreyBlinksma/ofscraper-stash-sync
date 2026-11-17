@@ -274,5 +274,20 @@ class MediaHandler:
             logging.info(f"Updated Scene for {username}: {stash_media_id}: {title}")
         elif media_type == 'Images':
             stash_handler.update_image(input)
+            gallery = stash_handler.get_gallery_id_by_code(post_id)
+            if not gallery:
+                input = {
+                    "title": title,
+                    "code": post_id,
+                    "date": posted_at_formatted,
+                    "studio_id": user_studio_id,
+                    "performer_ids": performer_ids,
+                    "details": details,
+                    "tag_ids": tags,
+                }
+                input['urls'] = [f'https://www.onlyfans.com/{post_id}/{username}']
+                gallery = stash_handler.create_stash_gallery(input)
+                logging.info(f"Created gallery for {username}: {post_id}: {title}")
+            stash_handler.add_image_to_gallery(gallery, stash_media_id)
             logging.info(f"Updated Image for {username}: {stash_media_id}: {title}")
         return

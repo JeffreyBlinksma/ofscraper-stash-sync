@@ -416,3 +416,42 @@ class StashAPIHandler:
         else:
             logging.error("Not connected to Stash API")
         return job
+    
+    def get_gallery_id_by_code(self, code):
+        gallery = None
+        try:
+            gallery = self.stash.find_galleries(
+                f={
+                    "code": {"value": code, "modifier": "EQUALS"},
+                },
+                get_count=True
+            )
+            if gallery[0] == 0:
+                return None
+            elif gallery[0] > 1:
+                logging.error(f'Post {code} has multiple galleries, which isn\'t supposed to happen. Returning the first gallery.')
+            gallery = gallery[1]
+        except Exception as e:
+            logging.error(f'Error getting gallery: {e}')
+            return None
+        return gallery[0]['id']
+
+    def create_stash_gallery(self, input_data):
+        if self.stash:
+            try:
+                gallery = self.stash.create_gallery(input_data)
+                logging.debug(f'Created gallery for post: {input_data['code']}')
+                return gallery
+            except Exception as e:
+                logging.error(f'Error creating gallery: {e}')
+        else:
+            logging.error('Not connected to Stash API')
+
+    def add_image_to_gallery(self, gallery_id, image_id):
+        if self.stash:
+            try:
+                self.stash.add_gallery_images(gallery_id, [image_id])
+            except Exception as e:
+                logging.error(f'Error adding to gallery: {e}')
+        else:
+            logging.error('Not connected to Stash API')
